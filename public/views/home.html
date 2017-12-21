@@ -1,0 +1,194 @@
+<section id="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header ch-alt text-center">
+                <h2 style="color:#2196f3;">CRUD OPERATION</h2>
+            </div>
+            <div class="container">
+                <form id="registrationinfo" name="registrationinfo" autocomplete="off" novalidate method="post" enctype="multipart/form-data">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <td>ID</td>
+                            <td>
+                                <input type="text" class="form-control" ng-pattern="/^[0-9][0-9]{0,50}$/" maxlength="50" ng-maxlength="50" ng-model="item.id"
+                                    placeholder="Id" name="id" required/>
+                                <span class="help-inline left" style="color:red" ng-show="registrationinfo.submitted&&registrationinfo.id.$error.required ||  registrationinfo.id.$touched && registrationinfo.id.$error.required">Id is required</span>
+                                <span style="color:red" ng-show="registrationinfo.id.$error.pattern">Please enter valid Id</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Name</td>
+                            <td>
+                                <input type="text" class="form-control" ng-pattern="/^[a-zA-Z][a-zA-Z. ]{0,50}$/" maxlength="50" ng-maxlength="50" placeholder="Name"
+                                    ng-model="item.name" name="name" required/>
+
+                                <span class="help-inline left" style="color:red" ng-show="registrationinfo.submitted&&registrationinfo.name.$error.required
+                                ||  registrationinfo.name.$touched && registrationinfo.name.$error.required
+                                ||  registrationinfo.name.$dirty && registrationinfo.name.$error.required">Name is required</span>
+                                <span style="color:red" ng-show="registrationinfo.name.$error.pattern">Please enter valid name</span>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>EmailID</td>
+                            <td>
+                                <input type="text" class="form-control" ng-pattern="/[_A-za-z0-9]+(\.[_A-za-z0-9]+)*@[A-za-z0-9-]+(\.[A-za-z0-9-]+)*(\.[A-za-z]{2,4})$/"
+                                    maxlength="50" placeholder="Email Id" ng-model="item.email" name="emailId" required/>
+
+                                <span class="help-inline left" style="color:red" ng-show="registrationinfo.submitted&&registrationinfo.emailId.$error.required
+                                ||  registrationinfo.emailId.$touched && registrationinfo.emailId.$error.required
+                                ||  registrationinfo.emailId.$dirty && registrationinfo.emailId.$error.required">Email address is required</span>
+
+                                <span style="color:red" ng-show="registrationinfo.emailId.$error.pattern">Please enter valid email address</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Phone</td>
+                            <td>
+                                <input type="text" class="form-control" ng-pattern="/(7|8|9)\d{9}/" ng-model="item.phone" name="mobileNumber" ng-maxlength="10"
+                                    maxlength="10" placeholder="Mobile Number" required/>
+
+                                <span class="help-inline left" style="color:red" ng-message="required" ng-if="registrationinfo.submitted&&registrationinfo.mobileNumber.$error.required
+                                ||  registrationinfo.mobileNumber.$touched && registrationinfo.mobileNumber.$error.required
+                                ||  registrationinfo.mobileNumber.$dirty && registrationinfo.mobileNumber.$error.required">Mobile number is required</span>
+                                <span style="color:red" ng-show="registrationinfo.mobileNumber.$error.pattern">Please enter valid mobile number</span>
+
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right" colspan="2">
+                                <button ng-click="addItem(item)" class="btn btn-primary" ng-disabled="registrationinfo.id.$invalid || registrationinfo.name.$invalid || registrationinfo.emailId.$invalid || registrationinfo.mobileNumber.$invalid">
+                                    Add
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <form id="updateinfo" name="updateinfo" autocomplete="off" novalidate method="post" enctype="multipart/form-data"></form>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>EmailID</th>
+                            <th>Phone</th>
+                            <th>Edit</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in items">
+                            <td>
+                                <span ng-hide="editMode">{{item.id}}</span>
+                                <!-- <input type="text" ng-show="editMode" ng-model="item.id"/>-->
+                            </td>
+                            <td>
+                                <span ng-hide="editMode">{{item.name}}</span>
+                                <!-- <input type="text" ng-show="editMode" ng-model="item.name" /> -->
+                            </td>
+                            <td>
+                                <span ng-hide="editMode">{{item.email}}</span>
+                                <!-- <input type="text" ng-show="editMode" ng-model="item.email" /> -->
+                            </td>
+                            <td>
+                                <span ng-hide="editMode">{{item.phone}}</span>
+                                <!-- <input type="text" ng-show="editMode" ng-model="item.phone" /> -->
+                            </td>
+                            <td>
+                                <!-- <i ng-hide="editMode" ng-click="editMode = true; editItem(item)" class="glyphicon glyphicon-edit"></i> -->
+                                <!-- <i class="glyphicon glyphicon-saved" ng-show="editMode" ng-click="editMode = false"></i> -->
+
+                                <i ng-hide="editMode" ng-click="editItemDetails(item,$index)" class="glyphicon glyphicon-edit"></i>
+                                <i class="glyphicon glyphicon-saved" ng-show="editMode" ng-click="editMode = false" ng-disabled="updateinfo.id.$invalid || registrationinfo.name.$invalid || registrationinfo.emailId.$invalid || registrationinfo.mobileNumber.$invalid"></i>
+                            </td>
+                            <td>
+                                <i ng-click="removeItem($index)" class="glyphicon glyphicon-trash"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div id="myModal" class="modal fade" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-xs">
+
+            <!-- Modal content-->
+            <div class="modal-content col-md-12 col-xs-12">
+                <div class="modal-header">
+                    <button type="button" class="close" ng-click="close()">&times;</button>
+                    <h4 class="modal-title">Update Details</h4>
+                </div>
+                <form id="updateinfo" name="updateinfo" autocomplete="off" novalidate method="post" enctype="multipart/form-data">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <td>ID</td>
+                            <td>
+                                <input type="text" class="form-control" ng-pattern="/^[0-9][0-9]{0,50}$/" maxlength="50" ng-maxlength="50" ng-model="editItem.id"
+                                    placeholder="Id" name="id" required/>
+                                <span class="help-inline left" style="color:red" ng-show="updateinfo.submitted&&updateinfo.id.$error.required ||  updateinfo.id.$touched && updateinfo.id.$error.required">Id is required</span>
+                                <span style="color:red" ng-show="updateinfo.id.$error.pattern">Please enter valid Id</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Name</td>
+                            <td>
+                                <input type="text" class="form-control" ng-pattern="/^[a-zA-Z][a-zA-Z. ]{0,50}$/" maxlength="50" ng-maxlength="50" placeholder="Name"
+                                    ng-model="editItem.name" name="name" required/>
+
+                                <span class="help-inline left" style="color:red" ng-show="updateinfo.submitted&&updateinfo.name.$error.required
+                                    ||  updateinfo.name.$touched && updateinfo.name.$error.required
+                                    ||  updateinfo.name.$dirty && updateinfo.name.$error.required">Name is required</span>
+                                <span style="color:red" ng-show="updateinfo.name.$error.pattern">Please enter valid name</span>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>EmailID</td>
+                            <td>
+                                <input type="text" class="form-control" ng-pattern="/[_A-za-z0-9]+(\.[_A-za-z0-9]+)*@[A-za-z0-9-]+(\.[A-za-z0-9-]+)*(\.[A-za-z]{2,4})$/"
+                                    maxlength="50" placeholder="Email Id" ng-model="editItem.email" name="emailId" required/>
+
+                                <span class="help-inline left" style="color:red" ng-show="updateinfo.submitted&&updateinfo.emailId.$error.required
+                                    ||  updateinfo.emailId.$touched && updateinfo.emailId.$error.required
+                                    ||  updateinfo.emailId.$dirty && updateinfo.emailId.$error.required">Email address is required</span>
+
+                                <span style="color:red" ng-show="updateinfo.emailId.$error.pattern">Please enter valid email address</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Phone</td>
+                            <td>
+                                <input type="text" class="form-control" ng-pattern="/(7|8|9)\d{9}/" ng-model="editItem.phone" name="mobileNumber" ng-maxlength="10"
+                                    maxlength="10" placeholder="Mobile Number" required/>
+
+                                <span class="help-inline left" style="color:red" ng-message="required" ng-if="updateinfo.submitted&&updateinfo.mobileNumber.$error.required
+                                    ||  updateinfo.mobileNumber.$touched && updateinfo.mobileNumber.$error.required
+                                    ||  updateinfo.mobileNumber.$dirty && updateinfo.mobileNumber.$error.required">Mobile number is required</span>
+                                <span style="color:red" ng-show="updateinfo.mobileNumber.$error.pattern">Please enter valid mobile number</span>
+
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right" colspan="2">
+                                <button ng-click="updateDetails(editItem)" class="btn btn-primary" ng-disabled="updateinfo.id.$invalid || updateinfo.name.$invalid || updateinfo.emailId.$invalid || updateinfo.mobileNumber.$invalid">
+                                    Add
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
